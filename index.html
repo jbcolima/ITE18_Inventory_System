@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sari-Sari Store Inventory</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sari-Sari Store Inventory System</h1>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search products...">
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Add/Edit Product</h2>
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label for="productName">Product Name:</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category">
+                            <option value="">Select Category</option>
+                        </select>
+                        <button type="button" id="addCategoryBtn">Add New Category</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="costPrice">Cost Price:</label>
+                        <input type="number" id="costPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellingPrice">Selling Price:</label>
+                        <input type="number" id="sellingPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lowStockAlert">Low Stock Alert Level:</label>
+                        <input type="number" id="lowStockAlert" required>
+                    </div>
+                    <button type="submit">Save Product</button>
+                </form>
+            </div>
+
+            <div class="content">
+                <div class="filters">
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Cost Price</th>
+                            <th>Selling Price</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog for adding new category -->
+    <div id="categoryDialog" class="dialog">
+        <div class="dialog-content">
+            <h3>Add New Category</h3>
+            <input type="text" id="newCategory" placeholder="Enter category name">
+            <div class="dialog-buttons">
+                <button id="saveCategoryBtn">Save</button>
+                <button id="cancelCategoryBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog for selling products -->
+    <div id="sellDialog" class="dialog">
+        <div class="dialog-content">
+            <h3>Sell Product</h3>
+            <div class="form-group">
+                <label for="sellQuantity">Quantity to sell:</label>
+                <input type="number" id="sellQuantity" min="1">
+            </div>
+            <div class="dialog-buttons">
+                <button id="confirmSellBtn">Confirm</button>
+                <button id="cancelSellBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
