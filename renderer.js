@@ -3,6 +3,7 @@ const { ipcRenderer } = require('electron');
 // DOM Elements
 const productForm = document.getElementById('productForm');
 const productTable = document.getElementById('inventoryTable').getElementsByTagName('tbody')[0];
+const salesTable = document.getElementById('salesTable').getElementsByTagName('tbody')[0];
 const searchInput = document.getElementById('searchInput');
 const categorySelect = document.getElementById('category');
 const categoryFilter = document.getElementById('categoryFilter');
@@ -14,12 +15,40 @@ const sellDialog = document.getElementById('sellDialog');
 const sellQuantityInput = document.getElementById('sellQuantity');
 const confirmSellBtn = document.getElementById('confirmSellBtn');
 const cancelSellBtn = document.getElementById('cancelSellBtn');
+const reportDateInput = document.getElementById('reportDate');
+const inventoryTabBtn = document.getElementById('inventoryTabBtn');
+const salesTabBtn = document.getElementById('salesTabBtn');
+const inventoryTab = document.getElementById('inventoryTab');
+const salesTab = document.getElementById('salesTab');
 
 let currentProducts = [];
 let selectedProductId = null;
+let selectedProduct = null;
+
+// Set default date to today
+reportDateInput.valueAsDate = new Date();
 
 // Load initial data
 ipcRenderer.send('load-data');
+
+// Tab switching
+inventoryTabBtn.addEventListener('click', () => switchTab('inventory'));
+salesTabBtn.addEventListener('click', () => switchTab('sales'));
+
+function switchTab(tab) {
+    if (tab === 'inventory') {
+        inventoryTab.classList.add('active');
+        salesTab.classList.remove('active');
+        inventoryTabBtn.classList.add('active');
+        salesTabBtn.classList.remove('active');
+    } else {
+        inventoryTab.classList.remove('active');
+        salesTab.classList.add('active');
+        inventoryTabBtn.classList.remove('active');
+        salesTabBtn.classList.add('active');
+        loadDailyReport();
+    }
+}
 
 // Event Listeners
 productForm.addEventListener('submit', handleProductSubmit);
@@ -29,7 +58,12 @@ addCategoryBtn.addEventListener('click', () => categoryDialog.style.display = 'b
 saveCategoryBtn.addEventListener('click', handleCategorySave);
 cancelCategoryBtn.addEventListener('click', () => categoryDialog.style.display = 'none');
 confirmSellBtn.addEventListener('click', handleSellConfirm);
-cancelSellBtn.addEventListener('click', () => sellDialog.style.display = 'none');
+cancelSellBtn.addEventListener('click', () => {
+    sellDialog.style.display = 'none';
+    selectedProduct = null;
+});
+reportDateInput.addEventListener('change', loadDailyReport);
+sellQuantityInput.addEventListener('input', updateSaleSummary);
 
 // IPC Handlers
 ipcRenderer.on('data-loaded', (event, data) => {
@@ -53,6 +87,28 @@ ipcRenderer.on('category-saved', (event, data) => {
     updateCategoryDropdowns(data.categories);
     categoryDialog.style.display = 'none';
     document.getElementById('newCategory').value = '';
+});
+
+ipcRenderer.on('sale-recorded', (event, data) => {
+    currentProducts = data.products;
+    renderProducts();
+    sellDialog.style.display = 'none';
+    selectedProduct = null;
+    if (salesTab.classList.contains('active')) {
+        loadDailyReport();
+    }
+});
+
+// Handle errors
+ipcRenderer.on('error', (event, message) => {
+    alert(message);
+});
+
+ipcRenderer.on('daily-report-loaded', (event, { report, sales }) => {
+    document.getElementById('totalSales').textContent = `P${report.totalSales.toFixed(2)}`;
+    document.getElementById('totalProfit').textContent = `P${report.totalProfit.toFixed(2)}`;
+    document.getElementById('totalTransactions').textContent = report.transactions;
+    renderSalesHistory(sales);
 });
 
 // Functions
@@ -79,20 +135,24 @@ function handleCategorySave() {
 
 function handleSellConfirm() {
     const quantity = parseInt(sellQuantityInput.value);
-    const product = currentProducts.find(p => p.id === selectedProductId);
-    
-    if (quantity > 0 && quantity <= product.quantity) {
-        product.quantity -= quantity;
-        ipcRenderer.send('save-product', product);
-        sellDialog.style.display = 'none';
-        sellQuantityInput.value = '';
-    } else {
+    if (!selectedProduct || quantity <= 0 || quantity > selectedProduct.quantity) {
         alert('Invalid quantity!');
+        return;
     }
+
+    const sale = {
+        productId: selectedProduct.id,
+        productName: selectedProduct.name,
+        quantity: quantity,
+        unitPrice: selectedProduct.sellingPrice,
+        totalAmount: quantity * selectedProduct.sellingPrice,
+        profit: quantity * (selectedProduct.sellingPrice - selectedProduct.costPrice)
+    };
+
+    ipcRenderer.send('record-sale', sale);
 }
 
 function updateCategoryDropdowns(categories) {
-    // Update add/edit form category dropdown
     categorySelect.innerHTML = '<option value="">Select Category</option>';
     categoryFilter.innerHTML = '<option value="">All Categories</option>';
     
@@ -135,6 +195,24 @@ function renderProducts() {
     });
 }
 
+function renderSalesHistory(sales) {
+    salesTable.innerHTML = '';
+    sales.forEach(sale => {
+        const row = salesTable.insertRow();
+        const date = new Date(sale.timestamp);
+        const time = date.toLocaleTimeString();
+        
+        row.innerHTML = `
+            <td>${time}</td>
+            <td>${sale.productName}</td>
+            <td>${sale.quantity}</td>
+            <td>P${sale.unitPrice.toFixed(2)}</td>
+            <td>P${sale.totalAmount.toFixed(2)}</td>
+            <td>P${sale.profit.toFixed(2)}</td>
+        `;
+    });
+}
+
 function filterProducts() {
     renderProducts();
 }
@@ -153,14 +231,36 @@ function editProduct(id) {
 }
 
 function sellProduct(id) {
-    selectedProductId = id;
-    sellDialog.style.display = 'block';
+    selectedProduct = currentProducts.find(p => p.id === id);
+    if (selectedProduct) {
+        sellQuantityInput.value = '1';
+        sellQuantityInput.max = selectedProduct.quantity;
+        updateSaleSummary();
+        sellDialog.style.display = 'block';
+    }
+}
+
+function updateSaleSummary() {
+    if (!selectedProduct) return;
+    
+    const quantity = parseInt(sellQuantityInput.value) || 0;
+    const totalAmount = quantity * selectedProduct.sellingPrice;
+    const profit = quantity * (selectedProduct.sellingPrice - selectedProduct.costPrice);
+    
+    document.getElementById('unitPrice').textContent = `P${selectedProduct.sellingPrice.toFixed(2)}`;
+    document.getElementById('totalAmount').textContent = `P${totalAmount.toFixed(2)}`;
+    document.getElementById('saleProfit').textContent = `P${profit.toFixed(2)}`;
 }
 
 function deleteProduct(id) {
     if (confirm('Are you sure you want to delete this product?')) {
         ipcRenderer.send('delete-product', id);
     }
+}
+
+function loadDailyReport() {
+    const date = reportDateInput.value;
+    ipcRenderer.send('get-daily-report', date);
 }
 
 function resetForm() {

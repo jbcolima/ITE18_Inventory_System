@@ -11,64 +11,113 @@
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search products...">
             </div>
+            <nav class="main-nav">
+                <button id="inventoryTabBtn" class="active">Inventory</button>
+                <button id="salesTabBtn">Sales & Reports</button>
+            </nav>
         </header>
 
         <div class="main-content">
-            <div class="sidebar">
-                <h2>Add/Edit Product</h2>
-                <form id="productForm">
-                    <input type="hidden" id="productId">
-                    <div class="form-group">
-                        <label for="productName">Product Name:</label>
-                        <input type="text" id="productName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Category:</label>
-                        <select id="category">
-                            <option value="">Select Category</option>
+            <!-- Inventory Tab -->
+            <div id="inventoryTab" class="tab-content active">
+                <div class="sidebar">
+                    <h2>Add/Edit Product</h2>
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="form-group">
+                            <label for="productName">Product Name:</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category:</label>
+                            <select id="category">
+                                <option value="">Select Category</option>
+                            </select>
+                            <button type="button" id="addCategoryBtn">Add New Category</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="costPrice">Cost Price:</label>
+                            <input type="number" id="costPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sellingPrice">Selling Price:</label>
+                            <input type="number" id="sellingPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lowStockAlert">Low Stock Alert Level:</label>
+                            <input type="number" id="lowStockAlert" required>
+                        </div>
+                        <button type="submit">Save Product</button>
+                    </form>
+                </div>
+
+                <div class="content">
+                    <div class="filters">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
                         </select>
-                        <button type="button" id="addCategoryBtn">Add New Category</button>
                     </div>
-                    <div class="form-group">
-                        <label for="costPrice">Cost Price:</label>
-                        <input type="number" id="costPrice" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="sellingPrice">Selling Price:</label>
-                        <input type="number" id="sellingPrice" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">Quantity:</label>
-                        <input type="number" id="quantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lowStockAlert">Low Stock Alert Level:</label>
-                        <input type="number" id="lowStockAlert" required>
-                    </div>
-                    <button type="submit">Save Product</button>
-                </form>
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Cost Price</th>
+                                <th>Selling Price</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="content">
-                <div class="filters">
-                    <select id="categoryFilter">
-                        <option value="">All Categories</option>
-                    </select>
+            <!-- Sales and Reports Tab -->
+            <div id="salesTab" class="tab-content">
+                <div class="sidebar">
+                    <h2>Daily Summary</h2>
+                    <div class="date-selector">
+                        <label for="reportDate">Select Date:</label>
+                        <input type="date" id="reportDate">
+                    </div>
+                    <div class="daily-stats">
+                        <div class="stat-box">
+                            <h3>Total Sales</h3>
+                            <p id="totalSales">P0.00</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>Total Profit</h3>
+                            <p id="totalProfit">P0.00</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>Transactions</h3>
+                            <p id="totalTransactions">0</p>
+                        </div>
+                    </div>
                 </div>
-                <table id="inventoryTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Cost Price</th>
-                            <th>Selling Price</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+
+                <div class="content">
+                    <h2>Sales History</h2>
+                    <table id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -92,6 +141,11 @@
             <div class="form-group">
                 <label for="sellQuantity">Quantity to sell:</label>
                 <input type="number" id="sellQuantity" min="1">
+            </div>
+            <div class="sale-summary">
+                <p>Unit Price: <span id="unitPrice">P0.00</span></p>
+                <p>Total Amount: <span id="totalAmount">P0.00</span></p>
+                <p>Profit: <span id="saleProfit">P0.00</span></p>
             </div>
             <div class="dialog-buttons">
                 <button id="confirmSellBtn">Confirm</button>

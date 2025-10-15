@@ -27,6 +27,26 @@ header h1 {
     margin-bottom: 1rem;
 }
 
+.main-nav {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.main-nav button {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.main-nav button.active {
+    background: white;
+    color: #333;
+}
+
 .search-bar {
     width: 100%;
     max-width: 500px;
@@ -40,6 +60,16 @@ header h1 {
 }
 
 .main-content {
+    display: flex;
+    gap: 2rem;
+}
+
+.tab-content {
+    display: none;
+    width: 100%;
+}
+
+.tab-content.active {
     display: flex;
     gap: 2rem;
 }
@@ -168,4 +198,63 @@ th {
     margin-top: 0.5rem;
     width: 100%;
     background-color: #607d8b;
+}
+
+/* Sales and Reports Styles */
+.date-selector {
+    margin-bottom: 1rem;
+}
+
+.daily-stats {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-box {
+    background: #f8f8f8;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.stat-box h3 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.stat-box p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.sale-summary {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f8f8;
+    border-radius: 4px;
+}
+
+.sale-summary p {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+#salesTable tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        flex: none;
+        width: 100%;
+    }
 }
