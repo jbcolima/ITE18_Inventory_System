@@ -5,9 +5,16 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: #FBF9FF;
+}
+
+.inter-heading {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .container {
@@ -17,7 +24,7 @@ body {
 }
 
 header {
-    background-color: #333;
+    background-color: #393B63;
     color: white;
     padding: 1rem;
     margin-bottom: 2rem;
@@ -80,6 +87,7 @@ header h1 {
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.875rem;
 }
 
 .content {
@@ -88,6 +96,7 @@ header h1 {
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.875rem;
 }
 
 .form-group {
@@ -108,7 +117,7 @@ header h1 {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #8e8ebc;
     color: white;
     padding: 8px 16px;
     border: none;
@@ -117,7 +126,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #7a7aa8;
 }
 
 table {
@@ -129,15 +138,17 @@ table {
 th, td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
 }
 
 th {
-    background-color: #f8f8f8;
+    background-color: #8e8ebc;
+    color: white;
 }
 
 .low-stock {
-    background-color: #ffebee;
+    background-color: #B3B7EE;
+    color: #000807;
 }
 
 .filters {
@@ -146,25 +157,103 @@ th {
 
 .filters select {
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #8e8ebc;
     border-radius: 4px;
 }
 
 .action-buttons {
+    position: relative;
     display: flex;
-    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 0;
+    border-style: none;
+    color: #8e8ebc;
+    font-size: 1.2rem;
+    transition: background-color 0.2s;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger-btn:hover {
+    background-color: #FBF9FF;
+    color: #393b63;
+}
+
+.low-stock .hamburger-btn {
+    color: #8e8ebc;
+}
+
+.low-stock .hamburger-btn:hover {
+    background-color: #B3B7EE;
+    color: #393b63;
+}
+
+.action-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+    min-width: 120px;
+    display: none;
+}
+
+.action-menu.show {
+    display: block;
+}
+
+.action-menu button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+}
+
+.action-menu button:hover {
+    background-color: #f5f5f5;
+}
+
+.action-menu .edit-btn {
+    color: black;
+}
+
+.action-menu .sell-btn {
+    color: black;
+}
+
+.action-menu .delete-btn {
+    color: red;
 }
 
 .edit-btn {
-    background-color: #2196F3;
+    background-color: #A2A3BB;
 }
 
 .delete-btn {
-    background-color: #f44336;
+    background-color: #B3B7EE;
 }
 
 .sell-btn {
-    background-color: #ff9800;
+    background-color: #A2A3BB;
 }
 
 /* Dialog styles */
@@ -185,6 +274,16 @@ th {
     margin: 100px auto;
     padding: 20px;
     border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.dialog-content input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    margin: 10px 0;
 }
 
 .dialog-buttons {
@@ -197,7 +296,7 @@ th {
 #addCategoryBtn {
     margin-top: 0.5rem;
     width: 100%;
-    background-color: #607d8b;
+    background-color: #8e8ebc;
 }
 
 /* Sales and Reports Styles */
@@ -212,10 +311,11 @@ th {
 }
 
 .stat-box {
-    background: #f8f8f8;
+    background: #FBF9FF;
     padding: 1rem;
     border-radius: 4px;
     text-align: center;
+    border: 2px solid #8e8ebc;
 }
 
 .stat-box h3 {
@@ -233,8 +333,9 @@ th {
 .sale-summary {
     margin: 1rem 0;
     padding: 1rem;
-    background: #f8f8f8;
+    background: #FBF9FF;
     border-radius: 4px;
+    border: 2px solid #A2A3BB;
 }
 
 .sale-summary p {
