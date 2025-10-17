@@ -185,11 +185,16 @@ function renderProducts() {
             <td>P${product.costPrice.toFixed(2)}</td>
             <td>P${product.sellingPrice.toFixed(2)}</td>
             <td>${product.quantity}</td>
-            <td>${product.quantity <= product.lowStockAlert ? 'Low Stock!' : 'In Stock'}</td>
+            <td>${product.quantity === 0 ? 'Out of Stock' : product.quantity <= product.lowStockAlert ? 'Low Stock' : 'In Stock'}</td>
             <td class="action-buttons">
-                <button class="edit-btn" onclick="editProduct('${product.id}')">Edit</button>
-                <button class="sell-btn" onclick="sellProduct('${product.id}')">Sell</button>
-                <button class="delete-btn" onclick="deleteProduct('${product.id}')">Delete</button>
+                <button class="hamburger-btn" onclick="toggleActionMenu('${product.id}')">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="action-menu" id="menu-${product.id}">
+                    <button class="edit-btn" onclick="editProduct('${product.id}')">Edit</button>
+                    <button class="sell-btn" onclick="sellProduct('${product.id}')">Sell</button>
+                    <button class="delete-btn" onclick="deleteProduct('${product.id}')">Delete</button>
+                </div>
             </td>
         `;
     });
@@ -262,6 +267,30 @@ function loadDailyReport() {
     const date = reportDateInput.value;
     ipcRenderer.send('get-daily-report', date);
 }
+
+function toggleActionMenu(productId) {
+    // Close all other menus first
+    const allMenus = document.querySelectorAll('.action-menu');
+    allMenus.forEach(menu => {
+        if (menu.id !== `menu-${productId}`) {
+            menu.classList.remove('show');
+        }
+    });
+    
+    // Toggle the current menu
+    const menu = document.getElementById(`menu-${productId}`);
+    menu.classList.toggle('show');
+}
+
+// Close menus when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.action-buttons')) {
+        const allMenus = document.querySelectorAll('.action-menu');
+        allMenus.forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
+});
 
 function resetForm() {
     document.getElementById('productId').value = '';
