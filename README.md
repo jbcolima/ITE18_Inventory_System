@@ -56,7 +56,7 @@ _(This command is for running from source for developers.)_
    - Confirm the sale
 
 5. **Low Stock Alerts**
-   - Products below their alert level are highlighted in red
+   - Products below their alert level are highlighted
    - Set custom alert levels for each product
 
 ## Data Storage
