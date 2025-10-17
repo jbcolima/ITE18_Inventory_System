@@ -5,11 +5,33 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win --x64",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^27.0.0"
+    "electron": "^27.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.jbcolima.sarisaritest.ite18_inventory",
+    "productName": "SariSari Inventory",
+    "files": [
+      "**/*",
+      "!node_modules/**/test/**",
+      "!**/node_modules/.bin"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "${productName}-setup-${version}.${ext}"
+    }
   }
 }
