@@ -18,13 +18,12 @@ A desktop application for managing inventory in a Sari-Sari store built with Ele
 
 ## Installation
 
-1. Make sure you have [Node.js](https://nodejs.org/) installed
-2. Clone this repository
-3. Navigate to the project directory
-4. Install dependencies:
-```bash
-npm install
-```
+The easiest way to get started is by downloading the executable file:
+1. Navigate to the Releases section of this repository.
+2. Download the latest .exe file for Windows.
+3. Run the installer to set up the application on your desktop.
+
+_(For developers who wish to run from source, please see the previous version of the README or contact the contributor.)_
 
 ## Running the Application
 
@@ -32,6 +31,8 @@ To start the application, run:
 ```bash
 npm start
 ```
+
+_(This command is for running from source for developers.)_
 
 ## Usage
 
